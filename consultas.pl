@@ -1,15 +1,3 @@
-/* Base de hechos sobre peliculas */
-
-% pelicula(Title, Year, Genre, Duration, Country, MainActor, Director)
-pelicula(the_matrix, 1999, sci_fi, 136, usa, keanu_reeves, lana_wachowski).
-pelicula(pulp_fiction, 1994, crime, 154, usa, john_travolta, quentin_tarantino).
-pelicula(fight_club, 1999, drama, 139, usa, brad_pitt, david_fincher).
-pelicula(forrest_gump, 1994, drama, 142, usa, tom_hanks, robert_zemeckis).
-pelicula(the_shawshank_redemption, 1994, drama, 142, usa, tim_robbins, frank_darabont).
-pelicula(the_dark_knight, 2008, action, 152, usa, christian_bale, christopher_nolan).
-pelicula(inception, 2010, sci_fi, 148, usa, leonardo_dicaprio, christopher_nolan).
-pelicula(titanic, 1997, romance, 195, usa, leonardo_dicaprio, james_cameron).
-pelicula(schindlers_list, 1993, biography, 195, usa, liam_neeson, steven_spielberg).
 pelicula(gladiator, 2000, action, 155, usa, russell_crowe, ridley_scott).
 
 % Reglas para filtrar peliculas segun el estado de animo
@@ -150,64 +138,68 @@ menu_helper_functions :-
     write('3. Filtrar peliculas por duracion'), nl,
     write('4. Filtrar peliculas por actor principal'), nl,
     write('5. Filtrar peliculas por director'), nl,
-    write('6. Busqueda Avanzada'), nl, % Nueva opcion para la busqueda avanzada
+    write('6. Busqueda Avanzada'), nl,
     write('7. Salir'), nl,
     read(Opcion),
     ejecutar_opcion(Opcion).
 
 ejecutar_opcion(1) :-
-    write('Generos disponibles: '), nl,
-    listar_generos,
     write('Ingresa el genero que deseas buscar: '), nl,
     read(Genre),
     pelicula_por_genero(Genre, Peliculas),
     write('Peliculas encontradas: '), write(Peliculas), nl,
     menu_helper_functions.
 ejecutar_opcion(2) :-
-    write('Anos de lanzamiento disponibles: '), nl,
-    listar_anos,
     write('Ingresa el ano de lanzamiento que deseas buscar: '), nl,
     read(Year),
     pelicula_por_ano(Year, Peliculas),
     write('Peliculas encontradas: '), write(Peliculas), nl,
     menu_helper_functions.
 ejecutar_opcion(3) :-
-    write('Duraciones disponibles: '), nl,
-    listar_duraciones,
     write('Ingresa la duracion que deseas buscar: '), nl,
     read(Duration),
     pelicula_por_duracion(Duration, Peliculas),
     write('Peliculas encontradas: '), write(Peliculas), nl,
     menu_helper_functions.
 ejecutar_opcion(4) :-
-    write('Actores principales disponibles: '), nl,
-    listar_actores,
     write('Ingresa el nombre del actor principal que deseas buscar: '), nl,
     read(Actor),
     pelicula_por_actor(Actor, Peliculas),
     write('Peliculas encontradas: '), write(Peliculas), nl,
     menu_helper_functions.
 ejecutar_opcion(5) :-
-    write('Directores disponibles: '), nl,
-    listar_directores,
     write('Ingresa el nombre del director que deseas buscar: '), nl,
     read(Director),
     pelicula_por_director(Director, Peliculas),
     write('Peliculas encontradas: '), write(Peliculas), nl,
     menu_helper_functions.
 ejecutar_opcion(6) :-
-    buscar_avanzado.
+    buscar_peliculas_avanzada.
 ejecutar_opcion(7) :-
     write('Espero que disfrutes viendo las peliculas recomendadas'), nl.
 ejecutar_opcion(_) :-
     write('Por favor, ingresa un numero valido'), nl,
     menu_helper_functions.
 
-% Nueva regla para la búsqueda avanzada
-buscar_avanzado :-
-    write('Ingresa los criterios de búsqueda avanzada: '), nl,
-    read(Criterios),
-    buscar_peliculas_avanzado(Criterios, Peliculas),
+buscar_peliculas_avanzada :-
+    write('Ingresa los criterios de búsqueda avanzada:'), nl,
+    buscar_peliculas_avanzada([]).
+
+buscar_peliculas_avanzada(Criterios) :-
+    write('Año de lanzamiento: '), nl,
+    read(Year),
+    write('Género: '), nl,
+    read(Genre),
+    write('Duración: '), nl,
+    read(Duration),
+    write('Pais: '), nl,
+    read(Country),
+    write('Actor principal: '), nl,
+    read(Actor),
+    write('Director: '), nl,
+    read(Director),
+    append(Criterios, [year(Year), genre(Genre), duration(Duration), country(Country), main_actor(Actor), director(Director)], NuevosCriterios),
+    buscar_peliculas(NuevosCriterios, Peliculas),
     write('Peliculas encontradas: '), write(Peliculas), nl,
     menu_helper_functions.
 
