@@ -1,3 +1,15 @@
+/* Base de hechos sobre peliculas */
+
+% pelicula(Title, Year, Genre, Duration, Country, MainActor, Director)
+pelicula(the_matrix, 1999, sci_fi, 136, usa, keanu_reeves, lana_wachowski).
+pelicula(pulp_fiction, 1994, crime, 154, usa, john_travolta, quentin_tarantino).
+pelicula(fight_club, 1999, drama, 139, usa, brad_pitt, david_fincher).
+pelicula(forrest_gump, 1994, drama, 142, usa, tom_hanks, robert_zemeckis).
+pelicula(the_shawshank_redemption, 1994, drama, 142, usa, tim_robbins, frank_darabont).
+pelicula(the_dark_knight, 2008, action, 152, usa, christian_bale, christopher_nolan).
+pelicula(inception, 2010, sci_fi, 148, usa, leonardo_dicaprio, christopher_nolan).
+pelicula(titanic, 1997, romance, 195, usa, leonardo_dicaprio, james_cameron).
+pelicula(schindlers_list, 1993, biography, 195, usa, liam_neeson, steven_spielberg).
 pelicula(gladiator, 2000, action, 155, usa, russell_crowe, ridley_scott).
 
 % Reglas para filtrar peliculas segun el estado de animo
