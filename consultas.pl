@@ -150,69 +150,54 @@ menu_helper_functions :-
     write('3. Filtrar peliculas por duracion'), nl,
     write('4. Filtrar peliculas por actor principal'), nl,
     write('5. Filtrar peliculas por director'), nl,
-    write('6. Busqueda Avanzada'), nl,
-    write('7. Salir'), nl,
+    write('6. Salir'), nl,
     read(Opcion),
     ejecutar_opcion(Opcion).
 
 ejecutar_opcion(1) :-
+    write('Generos disponibles: '), nl,
+    listar_generos,
     write('Ingresa el genero que deseas buscar: '), nl,
     read(Genre),
     pelicula_por_genero(Genre, Peliculas),
     write('Peliculas encontradas: '), write(Peliculas), nl,
     menu_helper_functions.
 ejecutar_opcion(2) :-
+    write('Anos de lanzamiento disponibles: '), nl,
+    listar_anos,
     write('Ingresa el ano de lanzamiento que deseas buscar: '), nl,
     read(Year),
     pelicula_por_ano(Year, Peliculas),
     write('Peliculas encontradas: '), write(Peliculas), nl,
     menu_helper_functions.
 ejecutar_opcion(3) :-
+    write('Duraciones disponibles: '), nl,
+    listar_duraciones,
     write('Ingresa la duracion que deseas buscar: '), nl,
     read(Duration),
     pelicula_por_duracion(Duration, Peliculas),
     write('Peliculas encontradas: '), write(Peliculas), nl,
     menu_helper_functions.
 ejecutar_opcion(4) :-
+    write('Actores principales disponibles: '), nl,
+    listar_actores,
     write('Ingresa el nombre del actor principal que deseas buscar: '), nl,
     read(Actor),
     pelicula_por_actor(Actor, Peliculas),
     write('Peliculas encontradas: '), write(Peliculas), nl,
     menu_helper_functions.
 ejecutar_opcion(5) :-
+    write('Directores disponibles: '), nl,
+    listar_directores,
     write('Ingresa el nombre del director que deseas buscar: '), nl,
     read(Director),
     pelicula_por_director(Director, Peliculas),
     write('Peliculas encontradas: '), write(Peliculas), nl,
     menu_helper_functions.
 ejecutar_opcion(6) :-
-    buscar_peliculas_avanzada.
-ejecutar_opcion(7) :-
     write('Espero que disfrutes viendo las peliculas recomendadas'), nl.
 ejecutar_opcion(_) :-
     write('Por favor, ingresa un numero valido'), nl,
-    menu_helper_functions.
-
-buscar_peliculas_avanzada :-
-    write('Ingresa los criterios de búsqueda avanzada:'), nl,
-    buscar_peliculas_avanzada([]).
-
-buscar_peliculas_avanzada(Criterios) :-
-    write('Año de lanzamiento: '), nl,
-    read(Year),
-    write('Género: '), nl,
-    read(Genre),
-    write('Duración: '), nl,
-    read(Duration),
-    write('Pais: '), nl,
-    read(Country),
-    write('Actor principal: '), nl,
-    read(Actor),
-    write('Director: '), nl,
-    read(Director),
-    append(Criterios, [year(Year), genre(Genre), duration(Duration), country(Country), main_actor(Actor), director(Director)], NuevosCriterios),
-    buscar_peliculas(NuevosCriterios, Peliculas),
-    write('Peliculas encontradas: '), write(Peliculas), nl,
     menu_helper_functions.
 
 recomendar_peliculas_por_estado_animo(feliz) :-
