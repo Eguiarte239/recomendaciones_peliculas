@@ -74,12 +74,13 @@ menu_generos :-
     listar_generos_con_preguntas.
 
 listar_generos_con_preguntas :-
-    findall(Genre, pelicula(_, _, Genre, _, _, _, _), Generos),
-    listar_generos_con_preguntas(Generos, 1, []).
+    findall(Genre, pelicula(_, _, Genre, _, _, _, _), ListaGeneros),
+    list_to_set(ListaGeneros, GenerosUnicos),
+    listar_generos_con_preguntas(GenerosUnicos, 1, []).
 
-listar_generos_con_preguntas([], _, _) :-
-    write('Lo siento, no puedo recomendarte ninguna película con los criterios seleccionados'), nl.
+listar_generos_con_preguntas([], _, _).
 listar_generos_con_preguntas([Genero|Resto], Numero, GenerosSeleccionados) :-
+    \+ member(Genero, GenerosSeleccionados),
     atomic_list_concat(['Te gustan las peliculas de ', Genero, '? (si/no): '], Pregunta),
     write(Numero), write('. '), write(Pregunta), nl,
     read(Respuesta),
