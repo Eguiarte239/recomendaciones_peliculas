@@ -75,31 +75,32 @@ menu_generos :-
 
 listar_generos_con_preguntas :-
     findall(Genre, pelicula(_, _, Genre, _, _, _, _), Generos),
-    listar_generos_con_preguntas(Generos, 1).
+    listar_generos_con_preguntas(Generos, 1, []).
 
-listar_generos_con_preguntas([], _) :-
+listar_generos_con_preguntas([], _, _) :-
     write('Lo siento, no puedo recomendarte ninguna película con los criterios seleccionados'), nl.
-listar_generos_con_preguntas([Genero|Resto], Numero) :-
+listar_generos_con_preguntas([Genero|Resto], Numero, GenerosSeleccionados) :-
     atomic_list_concat(['Te gustan las peliculas de ', Genero, '? (si/no): '], Pregunta),
     write(Numero), write('. '), write(Pregunta), nl,
     read(Respuesta),
     (
         Respuesta == si ->
             pelicula_por_genero(Genero, Peliculas),
-            menu_directores(Peliculas)
+            union(GenerosSeleccionados, [Genero], NuevosGeneros),
+            menu_directores(Peliculas, NuevosGeneros)
         ;
             NuevoNumero is Numero + 1,
-            listar_generos_con_preguntas(Resto, NuevoNumero)
+            listar_generos_con_preguntas(Resto, NuevoNumero, GenerosSeleccionados)
     ).
 
-menu_directores(Peliculas) :-
-    listar_directores(Peliculas).
+menu_directores(Peliculas, GenerosSeleccionados) :-
+    listar_directores(Peliculas, GenerosSeleccionados).
 
-listar_directores(Peliculas) :-
-    listar_directores(Peliculas, 1).
+listar_directores(Peliculas, GenerosSeleccionados) :-
+    listar_directores(Peliculas, GenerosSeleccionados, 1).
 
-listar_directores([], _).
-listar_directores([Pelicula|Resto], Numero) :-
+listar_directores([], _, _).
+listar_directores([Pelicula|Resto], GenerosSeleccionados, Numero) :-
     pelicula(Pelicula, _, _, _, _, _, Director),
     atomic_list_concat(['Te gustan las peliculas de ', Director, '? (si/no): '], Pregunta),
     write(Numero), write('. '), write(Pregunta), nl,
@@ -107,33 +108,41 @@ listar_directores([Pelicula|Resto], Numero) :-
     (
         Respuesta == si ->
             peliculas_por_director(Director, PeliculasFiltradas),
-            menu_actores(PeliculasFiltradas)
+            peliculas_por_generos(PeliculasFiltradas, GenerosSeleccionados, PeliculasIntersectadas),
+            menu_actores(PeliculasIntersectadas, GenerosSeleccionados)
         ;
             NuevoNumero is Numero + 1,
-            listar_directores(Resto, NuevoNumero)
+            listar_directores(Resto, GenerosSeleccionados, NuevoNumero)
     ).
 
-menu_actores(Peliculas) :-
-    listar_actores(Peliculas).
+peliculas_por_generos([], _, []).
+peliculas_por_generos([Pelicula|Resto], Generos, [Pelicula|Result]) :-
+    pelicula(Pelicula, _, Genre, _, _, _, _),
+    member(Genre, Generos),
+    peliculas_por_generos(Resto, Generos, Result).
+peliculas_por_generos([_|Resto], Generos, Result) :-
+    peliculas_por_generos(Resto, Generos, Result).
 
-listar_actores(Peliculas) :-
-    listar_actores(Peliculas, 1).
+menu_actores(Peliculas, GenerosSeleccionados) :-
+    listar_actores(Peliculas, GenerosSeleccionados).
+
+listar_actores(Peliculas, GenerosSeleccionados) :-
+    listar_actores(Peliculas, GenerosSeleccionados, 1).
 
 listar_actores([], _).
-listar_actores([Pelicula|Resto], Numero) :-
+listar_actores([Pelicula|Resto], GenerosSeleccionados, Numero) :-
     pelicula(Pelicula, _, _, _, _, Actor, _),
     atomic_list_concat(['Te gustan las peliculas protagonizadas por ', Actor, '? (si/no): '], Pregunta),
     write(Numero), write('. '), write(Pregunta), nl,
     read(Respuesta),
     (
         Respuesta == si ->
-            % Filtrar las películas por todos los criterios seleccionados
             peliculas_por_actor(Actor, PeliculasPorActor),
-            intersection(PeliculasPorActor, Peliculas, PeliculasFiltradas),
+            peliculas_por_generos(PeliculasPorActor, GenerosSeleccionados, PeliculasFiltradas),
             recomendar_pelicula(PeliculasFiltradas)
         ;
             NuevoNumero is Numero + 1,
-            listar_actores(Resto, NuevoNumero)
+            listar_actores(Resto, GenerosSeleccionados, NuevoNumero)
     ).
 
 recomendar_pelicula(Peliculas) :-
