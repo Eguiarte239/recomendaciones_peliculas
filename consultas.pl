@@ -138,17 +138,17 @@ listar_generos_con_preguntas([Genero|Resto], Numero, GenerosSeleccionados) :-
     ).
 
 menu_duraciones(Peliculas, GenerosSeleccionados) :-
-    listar_duraciones(Peliculas, GenerosSeleccionados).
+    findall(Duracion, (member(Genre, GenerosSeleccionados), pelicula(_, _, Genre, Duracion, _, _, _)), DuracionesConRepetidos),
+    list_to_set(DuracionesConRepetidos, DuracionesUnicas),
+    listar_duraciones(DuracionesUnicas, Peliculas, GenerosSeleccionados).
 
 listar_duraciones(Peliculas, GenerosSeleccionados) :-
     listar_duraciones(Peliculas, GenerosSeleccionados, 1, []).
 
-listar_duraciones([], _, _, _).
-listar_duraciones([Pelicula|Resto], GenerosSeleccionados, Numero, DuracionesSeleccionadas) :-
-    pelicula(Pelicula, _, _, Duracion, _, _, _),
-    \+ member(Duracion, DuracionesSeleccionadas),
+listar_duraciones([], _, _).
+listar_duraciones([Duracion|Resto], Peliculas, GenerosSeleccionados) :-
     atomic_list_concat(['Te gustan las peliculas de duracion ', Duracion, '? (si/no): '], Pregunta),
-    write(Numero), write('. '), write(Pregunta), nl,
+    write(Pregunta), nl,
     read(Respuesta),
     (
         Respuesta == si ->
@@ -156,8 +156,7 @@ listar_duraciones([Pelicula|Resto], GenerosSeleccionados, Numero, DuracionesSele
             peliculas_por_generos_y_duracion(PeliculasFiltradas, GenerosSeleccionados, Duracion, PeliculasIntersectadas),
             menu_paises(PeliculasIntersectadas, Duracion, GenerosSeleccionados)
         ;
-            NuevoNumero is Numero + 1,
-            listar_duraciones(Resto, GenerosSeleccionados, NuevoNumero, [Duracion|DuracionesSeleccionadas])
+            listar_duraciones(Resto, Peliculas, GenerosSeleccionados)
     ).
 
 peliculas_por_generos_y_duracion([], _, _, []).
