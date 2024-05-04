@@ -107,7 +107,7 @@ listar_duraciones([], _, _, _).
 listar_duraciones([Pelicula|Resto], GenerosSeleccionados, Numero, DuracionesSeleccionadas) :-
     pelicula(Pelicula, _, _, Duracion, _, _, _),
     \+ member(Duracion, DuracionesSeleccionadas),
-    atomic_list_concat(['Te gustan las peliculas de duración ', Duracion, '? (si/no): '], Pregunta),
+    atomic_list_concat(['Te gustan las peliculas de duracion ', Duracion, '? (si/no): '], Pregunta),
     write(Numero), write('. '), write(Pregunta), nl,
     read(Respuesta),
     (
@@ -117,7 +117,7 @@ listar_duraciones([Pelicula|Resto], GenerosSeleccionados, Numero, DuracionesSele
             menu_directores(PeliculasIntersectadas, Duracion, GenerosSeleccionados)
         ;
             NuevoNumero is Numero + 1,
-            listar_duraciones(Resto, GenerosSeleccionados, NuevoNumero, DuracionesSeleccionadas)
+            listar_duraciones(Resto, GenerosSeleccionados, NuevoNumero, [Duracion|DuracionesSeleccionadas]) % Se agrega Duracion a la lista de DuracionesSeleccionadas
     ).
 
 peliculas_por_generos_y_duracion([], _, _, []).
@@ -134,7 +134,7 @@ menu_directores(Peliculas, Duracion, GenerosSeleccionados) :-
 listar_directores(Peliculas, Duracion, GenerosSeleccionados) :-
     listar_directores(Peliculas, Duracion, GenerosSeleccionados, 1, []).
 
-listar_directores([], _, _, _).
+listar_directores([], _, _, _, _).
 listar_directores([Pelicula|Resto], Duracion, GenerosSeleccionados, Numero, DirectoresSeleccionados) :-
     pelicula(Pelicula, _, _, Duracion, _, _, Director),
     \+ member(Director, DirectoresSeleccionados),
@@ -144,22 +144,30 @@ listar_directores([Pelicula|Resto], Duracion, GenerosSeleccionados, Numero, Dire
     (
         Respuesta == si ->
             peliculas_por_director(Director, PeliculasFiltradas),
-            peliculas_por_generos_y_duracion(PeliculasFiltradas, GenerosSeleccionados, Duracion, PeliculasIntersectadas),
-            menu_actores(PeliculasIntersectadas, Duracion, Director, DirectoresSeleccionados, GenerosSeleccionados)
+            peliculas_por_generos_y_duracion_director(PeliculasFiltradas, GenerosSeleccionados, Duracion, Director, PeliculasIntersectadas),
+            menu_actores(PeliculasIntersectadas, Duracion, GenerosSeleccionados, Director)
         ;
             NuevoNumero is Numero + 1,
             listar_directores(Resto, Duracion, GenerosSeleccionados, NuevoNumero, DirectoresSeleccionados)
     ).
 
-menu_actores(Peliculas, Duracion, Director, DirectoresSeleccionados, GenerosSeleccionados) :-
-    listar_actores(Peliculas, Duracion, Director, DirectoresSeleccionados, GenerosSeleccionados).
+peliculas_por_generos_y_duracion_director([], _, _, _, []).
+peliculas_por_generos_y_duracion_director([Pelicula|Resto], Generos, Duracion, Director, [Pelicula|Result]) :-
+    pelicula(Pelicula, _, Genre, Duracion, _, _, Director),
+    member(Genre, Generos),
+    peliculas_por_generos_y_duracion_director(Resto, Generos, Duracion, Director, Result).
+peliculas_por_generos_y_duracion_director([_|Resto], Generos, Duracion, Director, Result) :-
+    peliculas_por_generos_y_duracion_director(Resto, Generos, Duracion, Director, Result).
 
-listar_actores(Peliculas, Duracion, Director, DirectoresSeleccionados, GenerosSeleccionados) :-
-    listar_actores(Peliculas, Duracion, Director, DirectoresSeleccionados, GenerosSeleccionados, 1, []).
+menu_actores(Peliculas, Duracion, GenerosSeleccionados, Director) :-
+    listar_actores(Peliculas, Duracion, GenerosSeleccionados, Director).
 
-listar_actores([], _, _, _, _, _, _).
-listar_actores([Pelicula|Resto], Duracion, Director, DirectoresSeleccionados, GenerosSeleccionados, Numero, ActoresSeleccionados) :-
-    pelicula(Pelicula, _, _, Duracion, _, Actor, _),
+listar_actores(Peliculas, Duracion, GenerosSeleccionados, Director) :-
+    listar_actores(Peliculas, Duracion, GenerosSeleccionados, Director, 1, []).
+
+listar_actores([], _, _, _, _, _).
+listar_actores([Pelicula|Resto], Duracion, GenerosSeleccionados, Director, Numero, ActoresSeleccionados) :-
+    pelicula(Pelicula, _, _, Duracion, _, Actor, Director),
     \+ member(Actor, ActoresSeleccionados),
     atomic_list_concat(['Te gustan las peliculas protagonizadas por ', Actor, '? (si/no): '], Pregunta),
     write(Numero), write('. '), write(Pregunta), nl,
@@ -167,12 +175,20 @@ listar_actores([Pelicula|Resto], Duracion, Director, DirectoresSeleccionados, Ge
     (
         Respuesta == si ->
             peliculas_por_actor(Actor, PeliculasPorActor),
-            peliculas_por_generos_y_duracion(PeliculasPorActor, GenerosSeleccionados, Duracion, PeliculasFiltradas),
+            peliculas_por_generos_y_duracion_director_actor(PeliculasPorActor, GenerosSeleccionados, Duracion, Director, Actor, PeliculasFiltradas),
             recomendar_pelicula(PeliculasFiltradas)
         ;
             NuevoNumero is Numero + 1,
-            listar_actores(Resto, Duracion, Director, DirectoresSeleccionados, GenerosSeleccionados, NuevoNumero, ActoresSeleccionados)
+            listar_actores(Resto, Duracion, GenerosSeleccionados, Director, NuevoNumero, ActoresSeleccionados)
     ).
+
+peliculas_por_generos_y_duracion_director_actor([], _, _, _, _, []).
+peliculas_por_generos_y_duracion_director_actor([Pelicula|Resto], Generos, Duracion, Director, Actor, [Pelicula|Result]) :-
+    pelicula(Pelicula, _, Genre, Duracion, _, Actor, Director),
+    member(Genre, Generos),
+    peliculas_por_generos_y_duracion_director_actor(Resto, Generos, Duracion, Director, Actor, Result).
+peliculas_por_generos_y_duracion_director_actor([_|Resto], Generos, Duracion, Director, Actor, Result) :-
+    peliculas_por_generos_y_duracion_director_actor(Resto, Generos, Duracion, Director, Actor, Result).
 
 recomendar_pelicula(Peliculas) :-
     length(Peliculas, NumPeliculas),
