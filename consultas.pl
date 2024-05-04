@@ -270,7 +270,8 @@ recomendar_pelicula(Peliculas) :-
     (
         NumPeliculas > 0 ->
             random_member(PeliculaRecomendada, Peliculas),
-            write('Te recomiendo la pelicula: '), write(PeliculaRecomendada), nl
+            pelicula(PeliculaRecomendada, Anio, _, _, _, _, _),
+            write('Te recomiendo la pelicula '), write(PeliculaRecomendada), write(' ('), write(Anio), write(')'), nl
         ;
             write('Lo siento, no puedo recomendarte ninguna pelicula con los criterios seleccionados'), nl
     ).
