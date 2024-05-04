@@ -26,8 +26,6 @@ pelicula(the_big_lebowski, 1998, comedy, corta, usa, jeff_bridges, joel_coen).
 pelicula(trainspotting, 1996, drama, corta, uk, ewan_mcgregor, danny_boyle).
 pelicula(lock_stock_and_two_smoking_barrels, 1998, comedy, corta, uk, jason_flemyng, guy_ritchie).
 pelicula(snatch, 2000, comedy, corta, uk, brad_pitt, guy_ritchie).
-pelicula(braveheart, 1995, biography, larga, usa, mel_gibson, mel_gibson).
-pelicula(goodfellas, 1990, biography, media, usa, robert_de_niro, martin_scorsese).
 pelicula(leon_the_professional, 1994, crime, corta, france, jean_reno, luc_besson).
 pelicula(the_intouchables, 2011, biography, corta, france, francois_cluzet, olivier_nakache).
 pelicula(eternal_sunshine_of_the_spotless_mind, 2004, drama, corta, usa, jim_carrey, michel_gondry).
@@ -51,6 +49,44 @@ pelicula(star_wars_episode_ii_attack_of_the_clones, 2002, action, media, usa, ha
 pelicula(star_wars_episode_iii_revenge_of_the_sith, 2005, action, media, usa, hayden_christensen, george_lucas).
 pelicula(taxi_driver, 1976, crime, corta, usa, robert_de_niro, martin_scorsese).
 pelicula(american_history_x, 1998, drama, corta, usa, edward_norton, tony_kaye).
+pelicula(bridget_joness_diary, 2001, comedy, media, uk, renee_zellweger, sharon_maguire).
+pelicula(hot_fuzz, 2007, action, media, uk, simon_pegg, edgar_wright).
+pelicula(the_theory_of_everything, 2014, biography, media, uk, eddie_redmayne, james_marsh).
+pelicula(finding_neverland, 2004, drama, media, uk, johnny_depp, marc_forster).
+pelicula(fantastic_beasts_and_where_to_find_them, 2016, adventure, media, uk, eddie_redmayne, david_yates).
+pelicula(shaun_of_the_dead, 2004, comedy, media, uk, simon_pegg, edgar_wright).
+pelicula(the_kings_speech, 2010, biography, media, uk, colin_firth, tom_hooper).
+pelicula(notting_hill, 1999, romance, media, uk, julia_roberts, roger_michell).
+pelicula(the_constant_gardener, 2005, drama, media, uk, ralph_fiennes, fernando_meirelles).
+pelicula(lawrence_of_arabia, 1962, adventure, larga, uk, peter_o_toole, david_lean).
+pelicula(amelie, 2001, comedy, media, france, audrey_tautou, jean-pierre_jeunet).
+pelicula(the_artist, 2011, comedy, media, france, jean_dujardin, michel_hazanavicius).
+pelicula(the_diving_bell_and_the_butterfly, 2007, biography, media, france, mathieu_amalric, julian_schnabel).
+pelicula(a_prophet, 2009, crime, media, france, tahar_rahim, jacques_audiard).
+pelicula(a_man_and_a_woman, 1966, drama, media, france, anouk_aimee, claude_lelouch).
+pelicula(blue_is_the_warmest_colour, 2013, drama, larga, france, adele_exarchopoulos, abdellatif_kechiche).
+pelicula(he_loves_me_he_loves_me_not, 2002, drama, corta, france, audrey_tautou, laetitia_casta).
+pelicula(the_lion_king, 1994, animation, larga, france, nathan_lane, roger_allers).
+pelicula(the_big_blue, 1988, adventure, larga, france, jean-marc_barr, luc_besson).
+pelicula(roma, 2018, drama, media, mexico, yalitza_aparicio, alfonso_cuaron).
+pelicula(pans_labyrinth, 2006, fantasy, media, spain, ivana_baquero, guillermo_del_toro).
+pelicula(coco, 2017, animation, media, mexico, anthony_gonzalez, lee_unkrich).
+pelicula(babel, 2006, drama, media, mexico, brad_pitt, alejandro_gonzalez_inarritu).
+pelicula(the_sea_inside, 2004, biography, media, mexico, javier_bardem, alejandro_amenabar).
+pelicula(the_crime_of_padre_amaro, 2002, crime, media, mexico, gael_garcia_bernal, carlos_carrera).
+pelicula(the_book_of_life, 2014, animation, media, mexico, diego_luna, jorge_r_gutierrez).
+pelicula(chronicle_of_a_death_foretold, 1987, drama, corta, mexico, rupert_everett, francesco_rosi).
+pelicula(city_of_god, 2002, crime, media, brazil, alexandre_rodrigues, fernando_meirelles).
+pelicula(central_station, 1998, drama, media, brazil, fernanda_montenegro, walter_salles).
+pelicula(elite_troop, 2007, action, media, brazil, wagner_moura, jose_padilha).
+pelicula(kiss_of_the_spider_woman, 1985, drama, media, brazil, william_hurt, hector_babenco).
+pelicula(boy_and_the_world, 2013, animation, corta, brazil, vinicius_garcia, ale_abreu).
+pelicula(city_of_men, 2007, crime, media, brazil, douglas_silva, paulo_morelli).
+pelicula(antonia, 2006, drama, media, brazil, negra_li, tata_amirat).
+pelicula(black_orpheus, 1959, drama, media, brazil, breno_mello, marcel_camus).
+pelicula(gabriela, 1983, drama, media, brazil, sonia_braga, bruno_barreto).
+pelicula(tropa_de_elite_2, 2010, action, media, brazil, wagner_moura, jose_padilha).
+
 /* Helper functions */
 
 % Filtra películas por género
@@ -68,6 +104,10 @@ peliculas_por_actor(Actor, Peliculas) :-
 % Filtra películas por director
 peliculas_por_director(Director, Peliculas) :-
     findall(Title, pelicula(Title, _, _, _, _, _, Director), Peliculas).
+
+% Filtra películas por país
+peliculas_por_pais(Pais, Peliculas) :-
+    findall(Title, pelicula(Title, _, _, _, Pais, _, _), Peliculas).
 
 start :-
     write('Bienvenido al sistema de recomendacion de peliculas'), nl,
@@ -114,10 +154,10 @@ listar_duraciones([Pelicula|Resto], GenerosSeleccionados, Numero, DuracionesSele
         Respuesta == si ->
             pelicula_por_duracion(Duracion, PeliculasFiltradas),
             peliculas_por_generos_y_duracion(PeliculasFiltradas, GenerosSeleccionados, Duracion, PeliculasIntersectadas),
-            menu_directores(PeliculasIntersectadas, Duracion, GenerosSeleccionados)
+            menu_paises(PeliculasIntersectadas, Duracion, GenerosSeleccionados)
         ;
             NuevoNumero is Numero + 1,
-            listar_duraciones(Resto, GenerosSeleccionados, NuevoNumero, [Duracion|DuracionesSeleccionadas]) % Se agrega Duracion a la lista de DuracionesSeleccionadas
+            listar_duraciones(Resto, GenerosSeleccionados, NuevoNumero, [Duracion|DuracionesSeleccionadas])
     ).
 
 peliculas_por_generos_y_duracion([], _, _, []).
@@ -128,15 +168,51 @@ peliculas_por_generos_y_duracion([Pelicula|Resto], Generos, Duracion, [Pelicula|
 peliculas_por_generos_y_duracion([_|Resto], Generos, Duracion, Result) :-
     peliculas_por_generos_y_duracion(Resto, Generos, Duracion, Result).
 
-menu_directores(Peliculas, Duracion, GenerosSeleccionados) :-
-    listar_directores(Peliculas, Duracion, GenerosSeleccionados).
+menu_paises(Peliculas, Duracion, GenerosSeleccionados) :-
+    listar_paises(Peliculas, Duracion, GenerosSeleccionados).
 
-listar_directores(Peliculas, Duracion, GenerosSeleccionados) :-
-    listar_directores(Peliculas, Duracion, GenerosSeleccionados, 1, []).
+listar_paises(Peliculas, Duracion, GenerosSeleccionados) :-
+    listar_paises(Peliculas, Duracion, GenerosSeleccionados, 1, []).
 
-listar_directores([], _, _, _, _).
-listar_directores([Pelicula|Resto], Duracion, GenerosSeleccionados, Numero, DirectoresSeleccionados) :-
-    pelicula(Pelicula, _, _, Duracion, _, _, Director),
+listar_paises([], _, _, _, _).
+listar_paises([Pelicula|Resto], Duracion, GenerosSeleccionados, Numero, PaisesSeleccionados) :-
+    pelicula(Pelicula, _, _, Duracion, Pais, _, _),
+    (
+        member(Pais, PaisesSeleccionados) ->
+            % Si el país ya ha sido seleccionado, continuamos con el siguiente
+            listar_paises(Resto, Duracion, GenerosSeleccionados, Numero, PaisesSeleccionados)
+        ;
+            atomic_list_concat(['Te gustan las películas producidas en ', Pais, '? (si/no): '], Pregunta),
+            write(Numero), write('. '), write(Pregunta), nl,
+            read(Respuesta),
+            (
+                Respuesta == si ->
+                    peliculas_por_pais(Pais, PeliculasFiltradas),
+                    peliculas_por_generos_y_duracion_director_pais(PeliculasFiltradas, GenerosSeleccionados, Duracion, Pais, PeliculasIntersectadas),
+                    menu_directores(PeliculasIntersectadas, Duracion, GenerosSeleccionados, Pais)
+                ;
+                    NuevoNumero is Numero + 1,
+                    listar_paises(Resto, Duracion, GenerosSeleccionados, NuevoNumero, [Pais|PaisesSeleccionados])
+            )
+    ).
+
+peliculas_por_generos_y_duracion_director_pais([], _, _, _, []).
+peliculas_por_generos_y_duracion_director_pais([Pelicula|Resto], Generos, Duracion, Pais, [Pelicula|Result]) :-
+    pelicula(Pelicula, _, Genre, Duracion, Pais, _, _),
+    member(Genre, Generos),
+    peliculas_por_generos_y_duracion_director_pais(Resto, Generos, Duracion, Pais, Result).
+peliculas_por_generos_y_duracion_director_pais([_|Resto], Generos, Duracion, Pais, Result) :-
+    peliculas_por_generos_y_duracion_director_pais(Resto, Generos, Duracion, Pais, Result).
+
+menu_directores(Peliculas, Duracion, GenerosSeleccionados, Pais) :-
+    listar_directores(Peliculas, Duracion, GenerosSeleccionados, Pais).
+
+listar_directores(Peliculas, Duracion, GenerosSeleccionados, Pais) :-
+    listar_directores(Peliculas, Duracion, GenerosSeleccionados, Pais, 1, []).
+
+listar_directores([], _, _, _, _, _).
+listar_directores([Pelicula|Resto], Duracion, GenerosSeleccionados, Pais, Numero, DirectoresSeleccionados) :-
+    pelicula(Pelicula, _, _, Duracion, Pais, _, Director),
     \+ member(Director, DirectoresSeleccionados),
     atomic_list_concat(['Te gustan las peliculas de ', Director, '? (si/no): '], Pregunta),
     write(Numero), write('. '), write(Pregunta), nl,
@@ -144,30 +220,30 @@ listar_directores([Pelicula|Resto], Duracion, GenerosSeleccionados, Numero, Dire
     (
         Respuesta == si ->
             peliculas_por_director(Director, PeliculasFiltradas),
-            peliculas_por_generos_y_duracion_director(PeliculasFiltradas, GenerosSeleccionados, Duracion, Director, PeliculasIntersectadas),
-            menu_actores(PeliculasIntersectadas, Duracion, GenerosSeleccionados, Director)
+            peliculas_por_generos_y_duracion_director_pais(PeliculasFiltradas, GenerosSeleccionados, Duracion, Pais, PeliculasIntersectadas),
+            menu_actores(PeliculasIntersectadas, Duracion, GenerosSeleccionados, Pais, Director)
         ;
             NuevoNumero is Numero + 1,
-            listar_directores(Resto, Duracion, GenerosSeleccionados, NuevoNumero, DirectoresSeleccionados)
+            listar_directores(Resto, Duracion, GenerosSeleccionados, Pais, NuevoNumero, DirectoresSeleccionados)
     ).
 
-peliculas_por_generos_y_duracion_director([], _, _, _, []).
-peliculas_por_generos_y_duracion_director([Pelicula|Resto], Generos, Duracion, Director, [Pelicula|Result]) :-
-    pelicula(Pelicula, _, Genre, Duracion, _, _, Director),
+peliculas_por_generos_y_duracion_director_pais([], _, _, _, _, []).
+peliculas_por_generos_y_duracion_director_pais([Pelicula|Resto], Generos, Duracion, Pais, Director, [Pelicula|Result]) :-
+    pelicula(Pelicula, _, Genre, Duracion, Pais, _, Director),
     member(Genre, Generos),
-    peliculas_por_generos_y_duracion_director(Resto, Generos, Duracion, Director, Result).
-peliculas_por_generos_y_duracion_director([_|Resto], Generos, Duracion, Director, Result) :-
-    peliculas_por_generos_y_duracion_director(Resto, Generos, Duracion, Director, Result).
+    peliculas_por_generos_y_duracion_director_pais(Resto, Generos, Duracion, Pais, Director, Result).
+peliculas_por_generos_y_duracion_director_pais([_|Resto], Generos, Duracion, Pais, Director, Result) :-
+    peliculas_por_generos_y_duracion_director_pais(Resto, Generos, Duracion, Pais, Director, Result).
 
-menu_actores(Peliculas, Duracion, GenerosSeleccionados, Director) :-
-    listar_actores(Peliculas, Duracion, GenerosSeleccionados, Director).
+menu_actores(Peliculas, Duracion, GenerosSeleccionados, Pais, Director) :-
+    listar_actores(Peliculas, Duracion, GenerosSeleccionados, Pais, Director).
 
-listar_actores(Peliculas, Duracion, GenerosSeleccionados, Director) :-
-    listar_actores(Peliculas, Duracion, GenerosSeleccionados, Director, 1, []).
+listar_actores(Peliculas, Duracion, GenerosSeleccionados, Pais, Director) :-
+    listar_actores(Peliculas, Duracion, GenerosSeleccionados, Pais, Director, 1, []).
 
-listar_actores([], _, _, _, _, _).
-listar_actores([Pelicula|Resto], Duracion, GenerosSeleccionados, Director, Numero, ActoresSeleccionados) :-
-    pelicula(Pelicula, _, _, Duracion, _, Actor, Director),
+listar_actores([], _, _, _, _, _, _).
+listar_actores([Pelicula|Resto], Duracion, GenerosSeleccionados, Pais, Director, Numero, ActoresSeleccionados) :-
+    pelicula(Pelicula, _, _, Duracion, Pais, Actor, Director),
     \+ member(Actor, ActoresSeleccionados),
     atomic_list_concat(['Te gustan las peliculas protagonizadas por ', Actor, '? (si/no): '], Pregunta),
     write(Numero), write('. '), write(Pregunta), nl,
@@ -175,20 +251,20 @@ listar_actores([Pelicula|Resto], Duracion, GenerosSeleccionados, Director, Numer
     (
         Respuesta == si ->
             peliculas_por_actor(Actor, PeliculasPorActor),
-            peliculas_por_generos_y_duracion_director_actor(PeliculasPorActor, GenerosSeleccionados, Duracion, Director, Actor, PeliculasFiltradas),
+            peliculas_por_generos_y_duracion_director_pais_actor(PeliculasPorActor, GenerosSeleccionados, Duracion, Pais, Director, Actor, PeliculasFiltradas),
             recomendar_pelicula(PeliculasFiltradas)
         ;
             NuevoNumero is Numero + 1,
-            listar_actores(Resto, Duracion, GenerosSeleccionados, Director, NuevoNumero, ActoresSeleccionados)
+            listar_actores(Resto, Duracion, GenerosSeleccionados, Pais, Director, NuevoNumero, ActoresSeleccionados)
     ).
 
-peliculas_por_generos_y_duracion_director_actor([], _, _, _, _, []).
-peliculas_por_generos_y_duracion_director_actor([Pelicula|Resto], Generos, Duracion, Director, Actor, [Pelicula|Result]) :-
-    pelicula(Pelicula, _, Genre, Duracion, _, Actor, Director),
+peliculas_por_generos_y_duracion_director_pais_actor([], _, _, _, _, _, []).
+peliculas_por_generos_y_duracion_director_pais_actor([Pelicula|Resto], Generos, Duracion, Pais, Director, Actor, [Pelicula|Result]) :-
+    pelicula(Pelicula, _, Genre, Duracion, Pais, Actor, Director),
     member(Genre, Generos),
-    peliculas_por_generos_y_duracion_director_actor(Resto, Generos, Duracion, Director, Actor, Result).
-peliculas_por_generos_y_duracion_director_actor([_|Resto], Generos, Duracion, Director, Actor, Result) :-
-    peliculas_por_generos_y_duracion_director_actor(Resto, Generos, Duracion, Director, Actor, Result).
+    peliculas_por_generos_y_duracion_director_pais_actor(Resto, Generos, Duracion, Pais, Director, Actor, Result).
+peliculas_por_generos_y_duracion_director_pais_actor([_|Resto], Generos, Duracion, Pais, Director, Actor, Result) :-
+    peliculas_por_generos_y_duracion_director_pais_actor(Resto, Generos, Duracion, Pais, Director, Actor, Result).
 
 recomendar_pelicula(Peliculas) :-
     length(Peliculas, NumPeliculas),
